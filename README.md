@@ -10,7 +10,6 @@ El problema que resuelve es manejar personajes que comparten datos (nombre, vida
 
 - `personajes.py`: contiene todas las clases del juego. No ejecuta nada al importarse.
 - `main.py`: crea los personajes, ejecuta los casos de prueba y los combates, mostrando los resultados en pantalla.
-- `test_personajes.py`: pruebas automatizadas con Pytest (reto extra).
 - `README.md`: este documento.
 
 ## 3. Clases
@@ -60,12 +59,6 @@ El combate termina cuando:
 python main.py
 ```
 
-4. Para correr las pruebas automáticas (necesita Pytest: `pip install pytest`):
-
-```bash
-pytest test_personajes.py -v
-```
-
 ## 8. Pruebas
 
 Al ejecutar `main.py` se comprueba lo siguiente. Las pruebas de validación crean personajes con datos malos y verifican que se lance `ValueError`.
@@ -84,106 +77,6 @@ Al ejecutar `main.py` se comprueba lo siguiente. Las pruebas de validación crea
 12. Dos personajes que no se hacen daño terminan en empate técnico.
 
 ---
-
-## Reto extra 1: Diagrama de clases UML
-
-Un diagrama de clases UML es un dibujo que muestra las clases de un programa, qué atributos y métodos tiene cada una y cómo se relacionan. Sirve para entender la arquitectura antes (o después) de programar.
-
-```mermaid
-classDiagram
-    class Personaje {
-        <<abstract>>
-        -str _nombre
-        -int _vida
-        -int _ataque
-        -int _defensa
-        +get_nombre() str
-        +set_nombre(valor)
-        +get_vida() int
-        +set_vida(valor)
-        +get_ataque() int
-        +set_ataque(valor)
-        +get_defensa() int
-        +set_defensa(valor)
-        +recibir_danio(cantidad) int
-        +esta_vivo() bool
-        +mostrar_estado() str
-        +validar_ataque(objetivo)
-        +atacar(objetivo)* int
-    }
-
-    class Guerrero {
-        +atacar(objetivo) int
-    }
-
-    class Mago {
-        +atacar(objetivo) int
-    }
-
-    class Arquero {
-        +atacar(objetivo) int
-    }
-
-    class Combate {
-        -Personaje personaje1
-        -Personaje personaje2
-        -Personaje atacante
-        -Personaje defensor
-        -int rondas
-        -Personaje ganador
-        -str resultado
-        +iniciar()
-        +cambiar_turno()
-        +verificar_ganador() Personaje
-        +mostrar_resultado()
-    }
-
-    Personaje <|-- Guerrero : herencia
-    Personaje <|-- Mago : herencia
-    Personaje <|-- Arquero : herencia
-    Combate o-- Personaje : agregación (2 participantes)
-    Personaje --> Personaje : asociación (atacar / recibir_danio)
-```
-
-**Explicación:** `Personaje` está marcada como abstracta y su método `atacar()` tiene un asterisco porque es abstracto. Las tres flechas de herencia muestran que Guerrero, Mago y Arquero heredan de ella y cada uno implementa su propio `atacar()`. El rombo vacío entre `Combate` y `Personaje` es la agregación: el combate usa dos personajes que existen por separado. La flecha de `Personaje` hacia sí misma es la asociación: un personaje interactúa con otro al atacarlo.
-
-## Reto extra 2: Pruebas automáticas con Pytest
-
-Pytest es una herramienta de Python que ejecuta pruebas automáticamente. En vez de correr el programa y revisar los mensajes a ojo, cada prueba usa `assert` para comprobar que el resultado es el esperado, y si algo falla, Pytest lo avisa. Así se puede repetir todas las pruebas en segundos cada vez que se cambia el código.
-
-Las pruebas están en `test_personajes.py` y cubren: creación de personajes válidos, rechazo de valores incorrectos, daño de cada clase, vida nunca negativa, derrotado que no puede atacar y resultado de los combates (incluyendo el ejemplo del enunciado donde gana Gandalf y el empate técnico).
-
-Comando:
-
-```bash
-pytest test_personajes.py -v
-```
-
-Resultado de la ejecución:
-
-```text
-collected 17 items
-
-test_personajes.py::test_creacion_personajes_validos PASSED              [  5%]
-test_personajes.py::test_vida_invalida[101] PASSED                       [ 11%]
-test_personajes.py::test_vida_invalida[-5] PASSED                        [ 17%]
-test_personajes.py::test_nombre_vacio PASSED                             [ 23%]
-test_personajes.py::test_ataque_invalido PASSED                          [ 29%]
-test_personajes.py::test_defensa_invalida PASSED                         [ 35%]
-test_personajes.py::test_dano_guerrero PASSED                            [ 41%]
-test_personajes.py::test_dano_mago_ignora_defensa PASSED                 [ 47%]
-test_personajes.py::test_dano_arquero_critico PASSED                     [ 52%]
-test_personajes.py::test_arquero_sin_dano_si_ataque_no_supera_defensa PASSED [ 58%]
-test_personajes.py::test_vida_nunca_negativa PASSED                      [ 64%]
-test_personajes.py::test_danio_negativo_rechazado PASSED                 [ 70%]
-test_personajes.py::test_derrotado_no_puede_atacar PASSED                [ 76%]
-test_personajes.py::test_no_se_puede_atacar_a_un_derrotado PASSED        [ 82%]
-test_personajes.py::test_combate_con_ganador PASSED                      [ 88%]
-test_personajes.py::test_combate_ejemplo_del_enunciado_gana_gandalf PASSED [ 94%]
-test_personajes.py::test_empate_tecnico PASSED                           [100%]
-
-============================== 17 passed ==============================
-```
 
 ## Reto de abstracción
 
